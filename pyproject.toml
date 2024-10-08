@@ -12,6 +12,8 @@ pytest = "^8.3.3"
 litestar = "^2.12.1"
 ruff = "^0.6.9"
 mypy = "^1.11.2"
+aiohttp = "^3.10.9"
+uvicorn = "^0.31.0"
 
 
 [build-system]
