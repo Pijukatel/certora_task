@@ -17,6 +17,9 @@ pip-delete-this-directory.txt
 .dmypy.json
 dmypy.json
 
+# ruff
+.ruff_cache/
+
 # Cython debug symbols
 cython_debug/
 
