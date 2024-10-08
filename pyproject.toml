@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "certora-task"
+version = "0.1.0"
+description = ""
+authors = ["Pijukatel <Pijukatel@users.noreply.github.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+faker = "^30.3.0"
+pytest = "^8.3.3"
+litestar = "^2.12.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
