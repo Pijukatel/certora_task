@@ -10,6 +10,4 @@ poetry run ruff check $DIRS_WITH_CODE
 
 # Unit tests
 echo "Pytest:"
-poetry run pytest test
-
-$SHELL
+poetry run pytest
