@@ -6,13 +6,29 @@ authors = ["Pijukatel <Pijukatel@users.noreply.github.com>"]
 readme = "README.md"
 
 [tool.poetry.dependencies]
-python = "^3.12"
+python = "3.12.7"
 faker = "^30.3.0"
 pytest = "^8.3.3"
 litestar = "^2.12.1"
 ruff = "^0.6.9"
 mypy = "^1.11.2"
+aiohttp = "^3.10.9"
+uvicorn = "^0.31.0"
+moto = {extras = ["server"], version = "^5.0.16"}
+aiobotocore = {extras = ["boto3"], version = "^2.15.1"}
+python-slugify = "^8.0.4"
+pytest-asyncio = "^0.24.0"
+types-aiobotocore = {extras = ["s3"], version = "^2.15.2"}
+types-aiobotocore-s3 = "^2.15.2"
 
+[tool.pytest.ini_options]
+pythonpath = [
+  "src"
+]
+
+[tool.mypy]
+mypy_path ="./src"
+exclude = "certora_task"
 
 [build-system]
 requires = ["poetry-core"]

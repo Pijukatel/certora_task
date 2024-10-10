@@ -42,7 +42,7 @@ async def get_city_stats(city_id: int, date: date) -> list[dict[str, Any]]:
             "delay": timedelta(minutes=randint(0, 90)),
             "accident": random() > 0.9,
         }
-        for _ in range(randint(1000, 3000))
+        for _ in range(randint(2, 4)) #for _ in range(randint(1000, 3000))
     ]
 
 
