@@ -9,40 +9,52 @@ from mocked_moto import mock_boto
 from aiohttp import web
 
 from configuration import REFERENCE_SERVER_PORT, REFERENCE_SERVER_ADDRESS
+from city_details_proccesing import City
 
 EXAMPLE_CITY_1 = "City1"
 EXAMPLE_ID_1 = 1
 EXAMPLE_CITY_2 = "City 2"
 EXAMPLE_ID_2 = 2
-EXAMPLE_COUNTRY = "Country1"
-
-example_city_data = [
-    {"departure-time": "2024-10-10T05:25:00", "bus-type": "BUS-110", "passengers": 100, "delay": "PT420S",
-     "accident": False},
-    {"departure-time": "2024-10-10T04:03:00", "bus-type": "BUS-102", "passengers": 39, "delay": "PT4620S",
-     "accident": True},
-]
+EXAMPLE_CITY_3 = "City 3"
+EXAMPLE_ID_3 = 3
+EXAMPLE_COUNTRY_1 = "Country1"
+EXAMPLE_COUNTRY_2 = "Country2"
 
 
-def generate_example_city_data(date: str) -> dict[int,list[dict[str,Any]]]:
+def generate_example_cities():
+    return {
+        EXAMPLE_ID_1: City(EXAMPLE_CITY_1, EXAMPLE_COUNTRY_1, EXAMPLE_ID_1),
+        EXAMPLE_ID_2: City(EXAMPLE_CITY_2, EXAMPLE_COUNTRY_1, EXAMPLE_ID_2),
+        EXAMPLE_ID_3: City(EXAMPLE_CITY_3, EXAMPLE_COUNTRY_2, EXAMPLE_ID_3)
+    }
+
+
+def generate_example_city_data(date: str) -> dict[int, list[dict[str, Any]]]:
     example_city1_data = [
-        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-1", "passengers": 10, "delay": "PT420S",
+        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-1", "passengers": 10, "delay": "PT100S",
          "accident": False},
-        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-2", "passengers": 20, "delay": "PT4620S",
+        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-2", "passengers": 20, "delay": "PT200S",
          "accident": True},
     ]
     example_city2_data = [
-        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-3", "passengers": 30, "delay": "PT120S",
+        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-3", "passengers": 30, "delay": "PT300S",
          "accident": False},
-        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-4", "passengers": 40, "delay": "PT1620S",
+        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-4", "passengers": 40, "delay": "PT400S",
          "accident": False},
     ]
-    return {EXAMPLE_ID_1:example_city1_data, EXAMPLE_ID_2:example_city2_data}
+    example_city3_data = [
+        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-5", "passengers": 50, "delay": "PT500S",
+         "accident": False},
+        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-6", "passengers": 60, "delay": "PT600S",
+         "accident": False},
+    ]
+    return {EXAMPLE_ID_1: example_city1_data, EXAMPLE_ID_2: example_city2_data, EXAMPLE_ID_3: example_city3_data}
 
 
 def example_cities_response():
-    return [{"id": EXAMPLE_ID_1, "name": EXAMPLE_CITY_1, "country": EXAMPLE_COUNTRY},
-            {"id": EXAMPLE_ID_2, "name": EXAMPLE_CITY_2, "country": EXAMPLE_COUNTRY}]
+    return [{"id": EXAMPLE_ID_1, "name": EXAMPLE_CITY_1, "country": EXAMPLE_COUNTRY_1},
+            {"id": EXAMPLE_ID_2, "name": EXAMPLE_CITY_2, "country": EXAMPLE_COUNTRY_1},
+            {"id": EXAMPLE_ID_3, "name": EXAMPLE_CITY_3, "country": EXAMPLE_COUNTRY_2}]
 
 
 def async_http_test_server():
@@ -70,7 +82,7 @@ def run_dummy_ref_server():
     server_process.kill()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def run_dummy_moto():
     with mock_boto():
         yield
