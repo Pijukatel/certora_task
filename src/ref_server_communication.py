@@ -1,6 +1,6 @@
+import datetime
 import json
 from dataclasses import dataclass
-
 import aiohttp
 from slugify import slugify
 
@@ -26,7 +26,7 @@ async def get_cities(session: aiohttp.ClientSession) -> set[City]:
                     json.loads(response_text))
 
 
-async def get_raw_city_stats_from_ref_server(city, date, session) -> bytes:
+async def get_raw_city_stats_from_ref_server(city: City, date: datetime.date, session: aiohttp.ClientSession) -> bytes:
     params = {"date": str(date)}
     async with session.get(f"{REFERENCE_SERVER}/cities/{city.id}/stats", params=params) as response:
         response_text = await response.read()

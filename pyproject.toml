@@ -20,6 +20,7 @@ python-slugify = "^8.0.4"
 pytest-asyncio = "^0.24.0"
 types-aiobotocore = {extras = ["s3"], version = "^2.15.2"}
 types-aiobotocore-s3 = "^2.15.2"
+isodate = "^0.7.2"
 
 [tool.pytest.ini_options]
 pythonpath = [

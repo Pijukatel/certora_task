@@ -1,9 +1,9 @@
 import asyncio
 import datetime
 
-from aiobotocore.client import AioBaseClient
 from litestar import Litestar, post
 import aiohttp
+from types_aiobotocore_s3 import S3Client
 
 from ref_server_communication import get_cities, City, get_raw_city_stats_from_ref_server
 from s3_communication import create_bucket, get_s3_client, push_city_stats_to_s3
@@ -25,7 +25,7 @@ async def collect_cities_data_to_s3(data: dict[str, str]) -> None:
             await asyncio.gather(*create_s3_buckets_tasks, *transfer_city_stats_tasks)
 
 
-async def _transfer_city_stats_to_s3(session: aiohttp.ClientSession, s3_client: AioBaseClient, city: City,
+async def _transfer_city_stats_to_s3(session: aiohttp.ClientSession, s3_client: S3Client, city: City,
                                      date: datetime.date) -> None:
     raw_city_stats = await get_raw_city_stats_from_ref_server(city, date, session)
     await push_city_stats_to_s3(city, date, raw_city_stats, s3_client)

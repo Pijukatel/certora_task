@@ -9,6 +9,7 @@ from mocked_moto import mock_boto
 from aiohttp import web
 
 from configuration import REFERENCE_SERVER_PORT, REFERENCE_SERVER_ADDRESS
+from ref_server_communication import City
 
 EXAMPLE_CITY_1 = "City1"
 EXAMPLE_ID_1 = 1
@@ -16,25 +17,24 @@ EXAMPLE_CITY_2 = "City 2"
 EXAMPLE_ID_2 = 2
 EXAMPLE_COUNTRY = "Country1"
 
-example_city_data = [
-    {"departure-time": "2024-10-10T05:25:00", "bus-type": "BUS-110", "passengers": 100, "delay": "PT420S",
-     "accident": False},
-    {"departure-time": "2024-10-10T04:03:00", "bus-type": "BUS-102", "passengers": 39, "delay": "PT4620S",
-     "accident": True},
-]
+def generate_example_cities():
+    return {
+    EXAMPLE_ID_1: City(EXAMPLE_CITY_1, EXAMPLE_COUNTRY, EXAMPLE_ID_1),
+    EXAMPLE_ID_2: City(EXAMPLE_CITY_2, EXAMPLE_COUNTRY, EXAMPLE_ID_2)
+    }
 
 
 def generate_example_city_data(date: str) -> dict[int,list[dict[str,Any]]]:
     example_city1_data = [
-        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-1", "passengers": 10, "delay": "PT420S",
+        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-1", "passengers": 10, "delay": "PT100S",
          "accident": False},
-        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-2", "passengers": 20, "delay": "PT4620S",
+        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-2", "passengers": 20, "delay": "PT200S",
          "accident": True},
     ]
     example_city2_data = [
-        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-3", "passengers": 30, "delay": "PT120S",
+        {"departure-time": f"{date}T05:25:00", "bus-type": "BUS-3", "passengers": 30, "delay": "PT300S",
          "accident": False},
-        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-4", "passengers": 40, "delay": "PT1620S",
+        {"departure-time": f"{date}T04:03:00", "bus-type": "BUS-4", "passengers": 40, "delay": "PT400S",
          "accident": False},
     ]
     return {EXAMPLE_ID_1:example_city1_data, EXAMPLE_ID_2:example_city2_data}
@@ -70,7 +70,7 @@ def run_dummy_ref_server():
     server_process.kill()
 
 
-@pytest.fixture(scope="session")
+@pytest.fixture(scope="function")
 def run_dummy_moto():
     with mock_boto():
         yield
