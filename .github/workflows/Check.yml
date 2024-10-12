@@ -17,8 +17,11 @@ jobs:
     - name: Build the Docker image
       run: docker build . --tag certora_task_image:1
 
-    - name: Run Ruff
+    - name: Run Ruff linter
       run: docker run certora_task_image:1 sh -c "cd /certora_task && poetry run ruff check"
+
+    - name: Run Ruff formatter
+      run: docker run certora_task_image:1 sh -c "cd /certora_task && poetry run ruff format --check"
 
     - name: Run Mypy
       run: docker run certora_task_image:1 sh -c "cd /certora_task && poetry run mypy src test"

@@ -1,4 +1,5 @@
 import os
+
 from types_aiobotocore_s3.literals import BucketLocationConstraintType
 
 # Deployment is out of scope of the task. Simple string constants to be used as a configuration.
