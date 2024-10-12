@@ -1,0 +1,19 @@
+services:
+    ref_server:
+        image: certora_task_image:1
+        command: sh -c "cd certora_task && poetry run uvicorn ref_server:app --host 0.0.0.0 --port 8000 --app-dir src"
+
+
+    mocked_moto:
+        image: certora_task_image:1
+        command: sh -c "cd certora_task/src && poetry run python -u -m mocked_moto"
+
+    app_server:
+        image: certora_task_image:1
+        command: sh -c "cd certora_task && poetry run uvicorn app_server:app --host 0.0.0.0 --port 8080 --app-dir src"
+        environment:
+          DOCKER_COMPOSE: "true"
+        expose:
+          - "8080"
+        ports:
+          - "8080:8080"

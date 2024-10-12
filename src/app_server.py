@@ -87,4 +87,4 @@ async def _transfer_city_stats_to_s3(
     await push_city_stats_to_s3(city, date, raw_city_stats, s3_client)
 
 
-app = Litestar([collect_cities_data_to_s3, get_country_stats])
+app = Litestar([collect_cities_data_to_s3, get_country_stats], debug=False)

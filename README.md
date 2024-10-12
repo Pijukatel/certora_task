@@ -19,7 +19,10 @@ How to Use:
 - run "poetry install" from the repo folder
 - use poetry to run tests, ruff or mypy. For detailed commands see **check.sh** (used for local development) or see **.github\workflows\Check.yml** which is used in CI
 - Can work in different os types and versions, but CI is using only one docker image to verify it. See **dockerfile**
-- To see example deployment and example use case and run **demo.sh**
+- Demo deployment on local machine by using docker compose and hosting app_server on localhost:8080 which is exposed. Both mocked_moto and ref_server are not exposed outside of containers.\
+To see example deployment and example use case and run:
+  - **demo_setup.sh** in one console to create docker image, run docker_compose and see compose logs
+  - **demo_example_requests.sh** in another console to send some example requests
 
 Design comments:
 - Data in S3 is structured in buckets named after countries and following keys {date}/{city}
@@ -42,12 +45,11 @@ Checks are used in the default way and further customization would be possible i
   - Could be prevented by creating data locks on specific portion of S3 keys that can be either used for updates or for aggregation. But never both at the same time.
 - Proper app deployment configuration.
   - Deployment is out of scope of the assignment and currently only simle hardcoded strings in configuration file are used.
+- Requests throttling. In case of too frequent /process-request some limit could be imposed. For example using simple semaphore from asyncio.
 - Input data validation.
   - If data is from external server, then it should be validated against our expectations. In current implementation placeholder function.
-
 - Checksum based data updates.
   - Some data from reference server can be identical to what is already saved in S3 (for example old historical data that will never be updated again). To prevent expensive data transfer, some checksum of data could be saved in S3 metadata and compared to "new" data checksum and overwrite S3 only if checksum differs.
-
 - Splitting CI to purely code change or environment change:
   - Environment change is either pure CI change or mixed (code + CI) change:
     - Condition: If change changes any poetry related files like pyproject.toml, poetry.lock, any workflow files

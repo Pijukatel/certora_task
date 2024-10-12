@@ -1,4 +1,5 @@
 import contextlib
+import time
 
 from moto.server import ThreadedMotoServer
 
@@ -16,4 +17,4 @@ def mock_boto():
 if __name__ == "__main__":
     with mock_boto():
         while True:
-            pass
+            time.sleep(1)
