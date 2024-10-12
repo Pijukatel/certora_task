@@ -1,5 +1,7 @@
-from moto.server import ThreadedMotoServer
 import contextlib
+
+from moto.server import ThreadedMotoServer
+
 from configuration import MOCKED_MOTO_SERVER_PORT
 
 

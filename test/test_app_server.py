@@ -1,15 +1,21 @@
 import asyncio
 import datetime
 import json
-import pytest
-import aiohttp
 
+import aiohttp
+import pytest
+from conftest import (
+    EXAMPLE_ID_1,
+    EXAMPLE_ID_2,
+    EXAMPLE_ID_3,
+    generate_example_cities,
+    generate_example_city_data,
+)
 from litestar.testing import AsyncTestClient
 
 from app_server import app
-from city_details_proccesing import create_city_stats_from_city_data, combine_stats
+from city_details_proccesing import combine_stats, create_city_stats_from_city_data
 from ref_server_communication import get_cities
-from conftest import generate_example_city_data, generate_example_cities, EXAMPLE_ID_1, EXAMPLE_ID_2, EXAMPLE_ID_3
 from s3_communication import get_s3_client
 
 
@@ -33,8 +39,10 @@ async def test_process_request(run_dummy_ref_server, run_dummy_moto):
 
     async with get_s3_client() as s3_client:
         for city_id in expected_cities:
-            resp = await s3_client.get_object(Bucket=expected_cities[city_id].country,
-                                              Key=f"{some_date}/{expected_cities[city_id].name}")
+            resp = await s3_client.get_object(
+                Bucket=expected_cities[city_id].country,
+                Key=f"{some_date}/{expected_cities[city_id].name}",
+            )
             stats_in_s3 = json.loads(await resp["Body"].content.read())
             assert stats_in_s3 == expected_stats[city_id]
 
@@ -68,25 +76,36 @@ async def test_get_country_stats(run_dummy_ref_server, run_dummy_moto):
     stats_3 = create_city_stats_from_city_data(example_data[EXAMPLE_ID_3])
     combined_stats_1_2 = combine_stats([stats_1, stats_2])
 
-    date_stats_1_2 = {'bus_count': combined_stats_1_2.bus_count,
-                      'passenger_count': combined_stats_1_2.passenger_count,
-                      'exist_accident': combined_stats_1_2.exist_accident,
-                      'average_delay_s': combined_stats_1_2.average_delay_s}
-    date_stats_3 = {'bus_count': stats_3.bus_count,
-                    'passenger_count': stats_3.passenger_count,
-                    'exist_accident': stats_3.exist_accident,
-                    'average_delay_s': stats_3.average_delay_s}
-    empty_stats = {'bus_count': 0, 'passenger_count': 0, 'exist_accident': False, 'average_delay_s': 0}
+    date_stats_1_2 = {
+        "bus_count": combined_stats_1_2.bus_count,
+        "passenger_count": combined_stats_1_2.passenger_count,
+        "exist_accident": combined_stats_1_2.exist_accident,
+        "average_delay_s": combined_stats_1_2.average_delay_s,
+    }
+    date_stats_3 = {
+        "bus_count": stats_3.bus_count,
+        "passenger_count": stats_3.passenger_count,
+        "exist_accident": stats_3.exist_accident,
+        "average_delay_s": stats_3.average_delay_s,
+    }
+    empty_stats = {
+        "bus_count": 0,
+        "passenger_count": 0,
+        "exist_accident": False,
+        "average_delay_s": 0,
+    }
 
     expected_result = {
         example_cities[EXAMPLE_ID_1].country: {
             start_date: date_stats_1_2,
-            '2024-02-03': empty_stats,
-            end_date: date_stats_1_2},
+            "2024-02-03": empty_stats,
+            end_date: date_stats_1_2,
+        },
         example_cities[EXAMPLE_ID_3].country: {
             start_date: date_stats_3,
-            '2024-02-03': empty_stats,
-            end_date: date_stats_3}
+            "2024-02-03": empty_stats,
+            end_date: date_stats_3,
+        },
     }
 
     # Act

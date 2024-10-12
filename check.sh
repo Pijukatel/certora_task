@@ -4,9 +4,10 @@ DIRS_WITH_CODE="src test"
 echo "Mypy:"
 poetry run mypy $DIRS_WITH_CODE
 
-# Formatting and linting
+# Linting and formatting
 echo "Ruff:"
-poetry run ruff check $DIRS_WITH_CODE
+poetry run ruff check --fix
+poetry run ruff format
 
 # Unit tests
 echo "Pytest:"

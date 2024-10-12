@@ -31,6 +31,9 @@ pythonpath = [
 mypy_path ="./src"
 exclude = "certora_task"
 
+[tool.ruff]
+lint.select = ["I"]
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
